@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Заявки MIM25</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#f6f4f4;--surface:#fff;--ink:#1d1517;--muted:#6e6164;--line:#e6dfe0;--accent:#c8102e;--accent-ink:#fff;--accent-soft:#fbe9ec;--ok:#2f7d4f;--ok-soft:#e5f3ea;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;--body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#171213;--surface:#211a1c;--ink:#f3ecee;--muted:#ab9da0;--line:#3a2f32;--accent:#ff4d64;--accent-ink:#1b0a0d;--accent-soft:#3a1a20;--ok:#6fd39a;--ok-soft:#173225;color-scheme:dark}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);font-variant-numeric:tabular-nums}
+.wrap{max-width:1000px;margin:0 auto;padding:24px max(16px,env(safe-area-inset-right,0px)) 60px max(16px,env(safe-area-inset-left,0px))}
+h1{font-family:var(--display);font-weight:700;font-size:26px;margin:0 0 16px}
+h1 b{color:var(--accent)}
+input,button,select{font:inherit;color:inherit}
+.login{display:flex;gap:8px;flex-wrap:wrap;max-width:420px}
+.login input{flex:1;min-width:0;height:42px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:0 12px}
+.btn{height:42px;padding:0 18px;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:600;cursor:pointer}
+.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px;color:var(--muted)}
+.bar select{height:36px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:0 8px}
+.ghost{height:36px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);cursor:pointer}
+.order{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px}
+.oh{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.oh h2{font-family:var(--display);font-weight:500;font-size:17px;margin:0}
+.pill{font-size:12px;border-radius:999px;padding:2px 10px;font-weight:600}
+.pill.new{background:var(--accent-soft);color:var(--accent)}.pill.done{background:var(--ok-soft);color:var(--ok)}
+.who{color:var(--muted);margin:4px 0 10px}
+.who b{color:var(--ink)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:6px 8px;border-bottom:1px dashed var(--line);text-align:left;vertical-align:top}
+th{font-weight:500;color:var(--muted);font-size:12.5px}
+td.n,th.n{text-align:right;white-space:nowrap}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+.foot b{font-size:17px}
+.msg{color:var(--accent)}
+.empty{color:var(--muted);padding:40px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><b>MIM25</b> · Заявки</h1>
+
+  <form class="login" id="login">
+    <input id="pw" type="password" placeholder="Пароль администратора" autocomplete="current-password">
+    <button class="btn" type="submit">Войти</button>
+    <p class="msg" id="loginMsg" hidden></p>
+  </form>
+
+  <section id="panel" hidden>
+    <div class="bar">
+      <label for="filter">Показать:</label>
+      <select id="filter"><option value="new">Новые</option><option value="done">Выполненные</option><option value="all">Все</option></select>
+      <button class="ghost" id="reload" type="button">Обновить</button>
+      <span id="count"></span>
+    </div>
+    <div id="list"></div>
+  </section>
+</div>
+<script>
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ')+' сум';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let pw='';try{pw=sessionStorage.getItem('mim25pw')||''}catch(e){}
+let orders=[];
+
+async function api(method,body){
+  const r=await fetch('/api/orders',{method,headers:{'x-admin-password':pw,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw Object.assign(new Error(j.error||'Ошибка '+r.status),{status:r.status});
+  return j;
+}
+async function load(){
+  try{
+    const j=await api('GET');orders=j.orders;
+    document.getElementById('login').hidden=true;document.getElementById('panel').hidden=false;
+    try{sessionStorage.setItem('mim25pw',pw)}catch(e){}
+    render();
+  }catch(e){
+    const m=document.getElementById('loginMsg');m.hidden=false;m.textContent=e.message;
+    document.getElementById('login').hidden=false;document.getElementById('panel').hidden=true;
+  }
+}
+function render(){
+  const f=document.getElementById('filter').value;
+  const list=orders.filter(o=>f==='all'||o.status===f);
+  document.getElementById('count').textContent=`${list.length} из ${orders.length}`;
+  document.getElementById('list').innerHTML=list.length?list.map(o=>`
+    <article class="order">
+      <div class="oh"><h2>Заявка №${o.id}</h2><span class="pill ${o.status}">${o.status==='done'?'Выполнена':'Новая'}</span></div>
+      <div class="who">${new Date(o.created_at).toLocaleString('ru-RU',{timeZone:'Asia/Tashkent'})} · <b>${esc(o.name)||'Без имени'}</b> · <b>${esc(o.phone)}</b>${o.note?' · '+esc(o.note):''}</div>
+      <div class="tw"><table><thead><tr><th>Арт.</th><th>Товар</th><th class="n">Кол-во</th><th class="n">Цена</th><th class="n">Сумма</th></tr></thead><tbody>
+      ${o.items.map(i=>`<tr><td>${i.id}</td><td>${esc(i.name)}</td><td class="n">${i.qty}</td><td class="n">${fmt(i.price)}</td><td class="n">${fmt(i.sum)}</td></tr>`).join('')}
+      </tbody></table></div>
+      <div class="foot"><b>Итого: ${fmt(o.total)}</b>
+        <button class="ghost" type="button" data-id="${o.id}" data-s="${o.status==='done'?'new':'done'}">${o.status==='done'?'Вернуть в новые':'Отметить выполненной'}</button></div>
+    </article>`).join(''):'<div class="empty">Заявок нет.</div>';
+}
+document.getElementById('login').onsubmit=e=>{e.preventDefault();pw=document.getElementById('pw').value;load()};
+document.getElementById('filter').onchange=render;
+document.getElementById('reload').onclick=load;
+document.getElementById('list').onclick=async e=>{
+  const b=e.target.closest('[data-id]');if(!b)return;b.disabled=true;
+  try{await api('POST',{id:+b.dataset.id,status:b.dataset.s});const o=orders.find(x=>x.id==b.dataset.id);o.status=b.dataset.s;render()}
+  catch(err){b.disabled=false;b.textContent=err.message}
+};
+if(pw)load();
+</script>
+</body>
+</html>

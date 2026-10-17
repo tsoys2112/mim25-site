@@ -1,0 +1,10 @@
+{
+  "name": "mim25-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Каталог и прайс-лист MIM25 с приёмом заявок (Vercel + Turso)",
+  "engines": {
+    "node": ">=18"
+  }
+}

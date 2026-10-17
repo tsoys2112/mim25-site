@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Каталог и прайс-лист MIM25: продукты, косметика, детская гигиена и товары для дома. Розничные цены в сумах.">
+<title>Каталог MIM25</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sticky header + category rail; brand sections = photo from catalog beside a price-list table; order drawer on the right */
+:root{
+  --bg:#f6f4f4; --surface:#ffffff; --ink:#1d1517; --muted:#6e6164; --line:#e6dfe0;
+  --accent:#c8102e; --accent-ink:#ffffff; --accent-soft:#fbe9ec; --photo:#ffffff;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#171213; --surface:#211a1c; --ink:#f3ecee; --muted:#ab9da0; --line:#3a2f32;
+  --accent:#ff4d64; --accent-ink:#1b0a0d; --accent-soft:#3a1a20; --photo:#f4f1f1; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#171213; --surface:#211a1c; --ink:#f3ecee; --muted:#ab9da0; --line:#3a2f32;
+  --accent:#ff4d64; --accent-ink:#1b0a0d; --accent-soft:#3a1a20; --photo:#f4f1f1; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;font-variant-numeric:tabular-nums}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.hrow{display:flex;align-items:center;gap:16px;padding-block:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:baseline;gap:10px;min-width:0}
+.logo b{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.02em;color:var(--accent)}
+.logo span{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.search{flex:1 1 260px;min-width:0;position:relative}
+.search input{width:100%;height:42px;border:1px solid var(--line);border-radius:999px;background:var(--bg);padding:0 16px 0 40px}
+.search svg{position:absolute;left:14px;top:12px;width:18px;height:18px;stroke:var(--muted)}
+.cartbtn{display:flex;align-items:center;gap:8px;height:42px;padding:0 16px;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:600;cursor:pointer;white-space:nowrap}
+.cartbtn .n{background:var(--accent-ink);color:var(--accent);border-radius:999px;min-width:22px;padding:0 6px;font-size:13px;text-align:center}
+.cats{display:flex;gap:8px;overflow-x:auto;padding-block:0 12px;scrollbar-width:thin}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13.5px;white-space:nowrap}
+.chip small{color:var(--muted);margin-left:4px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip[aria-pressed="true"] small{color:inherit;opacity:.7}
+
+.intro{padding-block:28px 8px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:end}
+.intro h1{font-family:var(--display);font-weight:700;font-size:clamp(24px,4vw,38px);line-height:1.1;margin:0;text-wrap:balance;max-width:22ch}
+.intro p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+.stats{display:flex;gap:20px;color:var(--muted);font-size:13px}
+.stats b{display:block;font-family:var(--display);font-size:20px;color:var(--ink);font-weight:500}
+
+main{padding-block:12px 80px}
+.brand{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;padding-block:22px;border-top:1px solid var(--line)}
+.brand.nophoto{grid-template-columns:minmax(0,1fr)}
+.photo{background:var(--photo);border-radius:var(--r);border:1px solid var(--line);overflow:hidden;align-self:start;position:sticky;top:calc(env(safe-area-inset-top,0px) + 130px)}
+.photo img{display:block;width:100%;height:auto}
+.bhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.bhead h2{font-family:var(--display);font-weight:500;font-size:19px;margin:0;letter-spacing:.01em}
+.tag{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px 16px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:0}
+.nm{min-width:0}
+.nm .t{font-weight:500}
+.nm .m{font-size:12.5px;color:var(--muted)}
+.price{font-weight:700;text-align:right;white-space:nowrap}
+.price small{font-weight:400;color:var(--muted);font-size:12px}
+.qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:999px;height:34px;background:var(--surface)}
+.qty button{width:34px;height:32px;border:0;background:none;cursor:pointer;font-size:18px;line-height:1;color:var(--ink)}
+.qty input{width:40px;border:0;background:none;text-align:center;-moz-appearance:textfield;padding:0}
+.qty input::-webkit-inner-spin-button{display:none}
+.add{height:34px;padding:0 14px;border-radius:999px;border:1px solid var(--accent);background:none;color:var(--accent);font-weight:600;cursor:pointer;white-space:nowrap}
+.add:hover{background:var(--accent-soft)}
+.act{width:122px;display:flex;justify-content:flex-end}
+.row.in .qty{border-color:var(--accent)}
+.empty{padding:60px 0;text-align:center;color:var(--muted)}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);z-index:41;display:flex;flex-direction:column;
+  padding:calc(env(safe-area-inset-top,0px) + 16px) max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 16px) 20px;box-shadow:-10px 0 30px rgba(0,0,0,.18)}
+.dhead{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.dhead h2{font-family:var(--display);font-weight:500;font-size:20px;margin:0}
+.x{border:0;background:none;font-size:26px;cursor:pointer;color:var(--muted);line-height:1}
+.dlist{flex:1;overflow:auto;margin:12px 0;border-top:1px solid var(--line)}
+.dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.dl .s{text-align:right;font-weight:600}
+.dl .ctl{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center}
+.link{border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13px;padding:0}
+.total{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}
+.total b{font-family:var(--display);font-size:22px;font-weight:500}
+.form{display:grid;gap:8px;margin-top:12px}
+.form input,.form textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:9px 12px}
+.form label{font-size:12.5px;color:var(--muted)}
+.primary{height:46px;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:600;cursor:pointer;margin-top:4px}
+.tg{color:var(--accent);font-weight:600;text-decoration:none}.tg:hover{text-decoration:underline}
+.tgbtn{display:flex;align-items:center;justify-content:center;height:44px;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-weight:600;text-decoration:none}
+.tgbtn:hover{background:var(--accent-soft)}
+.sel{user-select:all}
+.ok{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:14px}
+.err{color:var(--accent)}
+.primary:disabled{opacity:.45;cursor:default}
+.note{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+#orderText{width:100%;height:150px;font-size:12.5px;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:50;font-size:14px}
+
+footer{border-top:1px solid var(--line);padding-block:20px;color:var(--muted);font-size:13px}
+
+@media (max-width:760px){
+  .brand{grid-template-columns:minmax(0,1fr)}
+  .photo{position:static;max-width:420px}
+  .row{grid-template-columns:minmax(0,1fr) auto}
+  .row .act{grid-column:2;grid-row:2}
+  .row .price{grid-column:2;grid-row:1}
+  .logo span{display:none}
+}
+@media (prefers-reduced-motion:no-preference){.drawer{animation:slide .22s ease-out}@keyframes slide{from{transform:translateX(30px);opacity:.6}}}
+img{max-width:100%}
+</style>
+
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="hrow">
+      <div class="logo"><b>MIM25</b><span>Каталог товаров · Ташкент</span></div>
+      <label class="search" for="q">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="q" type="search" placeholder="Поиск: товар, бренд, артикул или штрихкод" autocomplete="off">
+      </label>
+      <button class="cartbtn" id="openCart" type="button">Заявка <span class="n" id="cartN">0</span></button>
+    </div>
+    <nav class="cats" id="cats" aria-label="Категории"></nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="intro">
+    <div>
+      <h1>Каталог и прайс-лист MIM25</h1>
+      <p>Продукты питания, косметика, детская гигиена и товары для дома. Розничные цены в сумах по прайс-листу от 30.09.2026. Выберите товары и отправьте заявку менеджеру в Telegram: <a class="tg" href="https://t.me/MIM25TS" target="_blank" rel="noopener">@MIM25TS</a>.</p>
+    </div>
+    <div class="stats" id="stats"></div>
+  </section>
+  <main id="list"></main>
+</div>
+<footer><div class="wrap">ООО «MIM25» · Telegram: <a class="tg" href="https://t.me/MIM25TS" target="_blank" rel="noopener">@MIM25TS</a> · Цены розничные, в сумах, по прайс-листу от 30.09.2026 · Фото из каталога продукции MIM25</div></footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-label="Заявка">
+  <div class="dhead"><h2>Ваша заявка</h2><button class="x" id="closeCart" type="button" aria-label="Закрыть">×</button></div>
+  <div class="dlist" id="dlist"></div>
+  <div class="total"><span id="dcount"></span><b id="dtotal">0 сум</b></div>
+  <div class="form">
+    <div><label for="cName">Имя или компания</label><input id="cName" autocomplete="organization"></div>
+    <div><label for="cPhone">Телефон *</label><input id="cPhone" type="tel" autocomplete="tel" placeholder="+998"></div>
+    <div><label for="cNote">Комментарий</label><input id="cNote" placeholder="Адрес доставки, удобное время"></div>
+    <input id="website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+    <button class="primary" id="sendOrder" type="button">Отправить заявку</button>
+    <div class="ok" id="okMsg" hidden></div>
+    <button class="link" id="copyOrder" type="button">Скопировать текст заявки</button>
+    <a class="tgbtn" href="https://t.me/MIM25TS" target="_blank" rel="noopener">Открыть Telegram @MIM25TS</a>
+    <p class="note">Менеджер получит заявку и свяжется с вами. Можно также написать в Telegram <b class="sel">@MIM25TS</b>.</p>
+    <textarea id="orderText" readonly hidden></textarea>
+    <button class="link" id="clearCart" type="button">Очистить заявку</button>
+  </div>
+</aside>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+let items=[], byId=new Map(), cats=[], counts={};
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ')+' сум';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let cat='Все', q='', cart={};
+try{cart=JSON.parse(localStorage.getItem('mim25cart')||'{}')||{}}catch(e){cart={}}
+const save=()=>{try{localStorage.setItem('mim25cart',JSON.stringify(cart))}catch(e){}};
+
+function renderStats(){document.getElementById('stats').innerHTML=
+  `<div><b>${items.length}</b>товаров</div><div><b>${new Set(items.map(i=>i.b)).size}</b>брендов</div><div><b>${cats.length}</b>категорий</div>`;}
+function renderCats(){
+  document.getElementById('cats').innerHTML=['Все',...cats].map(c=>
+    `<button class="chip" type="button" data-c="${esc(c)}" aria-pressed="${c===cat}">${esc(c)}<small>${c==='Все'?items.length:counts[c]}</small></button>`).join('');
+}
+function rowHTML(i){
+  const n=cart[i.id]||0;
+  const meta=[`Арт. ${i.id}`, i.blk?`в блоке ${i.blk} шт`:'', i.bc?`ШК ${i.bc}`:''].filter(Boolean).join(' · ');
+  const act=n?`<div class="qty"><button type="button" data-d="-1" aria-label="Меньше">−</button><input id="q${i.id}" type="number" min="0" inputmode="numeric" value="${n}" aria-label="Количество"><button type="button" data-d="1" aria-label="Больше">+</button></div>`
+             :`<button class="add" type="button" data-d="1">В заявку</button>`;
+  return `<div class="row${n?' in':''}" data-id="${i.id}"><div class="nm"><div class="t">${esc(i.n)}</div><div class="m">${esc(meta)}</div></div><div class="price">${fmt(i.p)}</div><div class="act">${act}</div></div>`;
+}
+function render(){
+  const s=q.trim().toLowerCase();
+  const f=items.filter(i=>(cat==='Все'||i.c===cat)&&(!s||(i.n+' '+i.b+' '+i.id+' '+i.bc+' '+i.c).toLowerCase().includes(s)));
+  const groups=new Map();
+  for(const i of f){const k=i.c+'|'+i.b;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(i)}
+  let h='';
+  for(const [k,arr] of groups){
+    const i0=arr[0], img=i0.img;
+    h+=`<section class="brand${img?'':' nophoto'}">${img?`<div class="photo"><img src="${img}" alt="${esc(i0.b)}" loading="lazy"></div>`:''}
+      <div><div class="bhead"><h2>${esc(i0.b)}</h2><span class="tag">${esc(i0.c)} · ${arr.length} ${plural(arr.length)}</span></div>
+      <div class="rows">${arr.map(rowHTML).join('')}</div></div></section>`;
+  }
+  document.getElementById('list').innerHTML=h||`<div class="empty">Ничего не найдено. Попробуйте другое слово или выберите «Все».</div>`;
+}
+function plural(n){const a=n%10,b=n%100;return a===1&&b!==11?'товар':a>=2&&a<=4&&(b<10||b>=20)?'товара':'товаров'}
+function setQty(id,n){n=Math.max(0,Math.min(99999,Math.floor(+n||0)));if(n)cart[id]=n;else delete cart[id];save();
+  const r=document.querySelector(`.row[data-id="${id}"]`);if(r)r.outerHTML=rowHTML(byId.get(id));updateCart()}
+function updateCart(){
+  const ids=Object.keys(cart).map(Number);
+  const units=ids.reduce((a,id)=>a+cart[id],0), sum=ids.reduce((a,id)=>a+cart[id]*byId.get(id).p,0);
+  document.getElementById('cartN').textContent=ids.length;
+  document.getElementById('dcount').textContent=ids.length?`${ids.length} поз., ${units} шт`:'Пока пусто';
+  document.getElementById('dtotal').textContent=fmt(sum);
+  document.getElementById('copyOrder').disabled=!ids.length;document.getElementById('sendOrder').disabled=!ids.length;
+  document.getElementById('dlist').innerHTML=ids.length?ids.map(id=>{const i=byId.get(id);return `<div class="dl" data-id="${id}"><div>${esc(i.n)}</div><div class="s">${fmt(i.p*cart[id])}</div>
+     <div class="ctl"><span class="m">${cart[id]} × ${fmt(i.p)}</span><span class="qty"><button type="button" data-d="-1" aria-label="Меньше">−</button><input id="dq${id}" type="number" min="0" value="${cart[id]}" aria-label="Количество"><button type="button" data-d="1" aria-label="Больше">+</button></span></div></div>`}).join('')
+     :`<div class="empty">Добавьте товары кнопкой «В заявку».</div>`;
+}
+function orderText(){
+  const ids=Object.keys(cart).map(Number);let t='Заявка MIM25\n';
+  const nm=document.getElementById('cName').value.trim(),ph=document.getElementById('cPhone').value.trim(),nt=document.getElementById('cNote').value.trim();
+  if(nm)t+='Клиент: '+nm+'\n'; if(ph)t+='Телефон: '+ph+'\n'; if(nt)t+='Комментарий: '+nt+'\n';
+  t+='\n';let sum=0;
+  ids.forEach((id,k)=>{const i=byId.get(id),s=i.p*cart[id];sum+=s;t+=`${k+1}. [${id}] ${i.n} — ${cart[id]} шт × ${fmt(i.p)} = ${fmt(s)}\n`});
+  return t+`\nИтого: ${fmt(sum)}`;
+}
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2200)}
+function openCart(o){document.getElementById('drawer').hidden=!o;document.getElementById('scrim').hidden=!o;if(!o)document.getElementById('orderText').hidden=true}
+
+document.getElementById('cats').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;renderCats();render();window.scrollTo({top:0})});
+let tm;document.getElementById('q').addEventListener('input',e=>{clearTimeout(tm);tm=setTimeout(()=>{q=e.target.value;render()},120)});
+function onStep(e){const b=e.target.closest('[data-d]');if(!b)return;const r=b.closest('[data-id]');const id=+r.dataset.id;setQty(id,(cart[id]||0)+ +b.dataset.d)}
+function onInput(e){if(e.target.type!=='number')return;const r=e.target.closest('[data-id]');setQty(+r.dataset.id,e.target.value)}
+for(const el of [document.getElementById('list'),document.getElementById('dlist')]){el.addEventListener('click',onStep);el.addEventListener('change',onInput)}
+document.getElementById('openCart').onclick=()=>openCart(true);
+document.getElementById('closeCart').onclick=()=>openCart(false);
+document.getElementById('scrim').onclick=()=>openCart(false);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')openCart(false)});
+document.getElementById('clearCart').onclick=()=>{cart={};save();render();updateCart();toast('Заявка очищена')};
+document.getElementById('sendOrder').onclick=async()=>{
+  const btn=document.getElementById('sendOrder'),ok=document.getElementById('okMsg');
+  const phone=document.getElementById('cPhone').value.trim();
+  if(phone.replace(/\D/g,'').length<7){ok.hidden=false;ok.className='ok err';ok.textContent='Укажите номер телефона, чтобы менеджер мог с вами связаться.';document.getElementById('cPhone').focus();return}
+  btn.disabled=true;btn.textContent='Отправляем…';
+  try{
+    const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      name:document.getElementById('cName').value,phone,note:document.getElementById('cNote').value,website:document.getElementById('website').value,
+      items:Object.keys(cart).map(id=>({id:+id,qty:cart[id]}))})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(j.error||'Не удалось отправить заявку');
+    ok.hidden=false;ok.className='ok';ok.textContent=`Заявка №${j.id} принята на сумму ${fmt(j.total)}. Менеджер свяжется с вами.`;
+    cart={};save();render();updateCart();
+  }catch(e){ok.hidden=false;ok.className='ok err';ok.textContent=e.message+'. Можно скопировать текст заявки и отправить в Telegram @MIM25TS.'}
+  finally{btn.textContent='Отправить заявку';btn.disabled=!Object.keys(cart).length}
+};
+document.getElementById('copyOrder').onclick=()=>{
+  const t=orderText(),ta=document.getElementById('orderText');ta.value=t;
+  const fallback=()=>{ta.hidden=false;ta.focus();ta.select();toast('Выделите текст и скопируйте вручную')};
+  try{navigator.clipboard.writeText(t).then(()=>toast('Заявка скопирована. Отправьте её в Telegram @MIM25TS'),fallback)}catch(e){fallback()}
+};
+fetch('/data/products.json').then(r=>r.json()).then(d=>{
+  items=d; byId=new Map(items.map(i=>[i.id,i]));
+  cats=[...new Set(items.map(i=>i.c))];
+  counts=items.reduce((a,i)=>(a[i.c]=(a[i.c]||0)+1,a),{});
+  for(const k in cart){if(!byId.has(+k)||!(cart[k]>0))delete cart[k]}
+  renderStats();renderCats();render();updateCart();
+}).catch(()=>{document.getElementById('list').innerHTML='<div class="empty">Не удалось загрузить каталог. Обновите страницу.</div>'});
+</script>
+</body>
+</html>
